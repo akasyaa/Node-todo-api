@@ -4,16 +4,17 @@ const bodyParser = require('body-parser');
 const router = require('./router');
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost:27017/TodoApp');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/TodoApp');
 
 var app = express();
+const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
 router(app);
 
-app.listen(3000, () => {
-    console.log('Started on port 3000.');
+app.listen(port, () => {
+    console.log(`Started on port ${port}`);
 })
 
 module.exports = app;
