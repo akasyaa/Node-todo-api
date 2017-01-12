@@ -4,12 +4,12 @@ const request = require('supertest');
 const app = require('../server/server');
 const Todo = require('../models/todo');
 
-beforeEach((done) => {
-    Todo.remove({})
-        .then(() => done());
-})
+xdescribe('POST /api/todos', () => {
+    beforeEach((done) => {
+        Todo.remove({})
+            .then(() => done());
+    });
 
-describe('POST /api/todos', () => {
     it('should create a new todo', (done) => {
         const text = 'Test text';
 
@@ -57,4 +57,8 @@ describe('POST /api/todos', () => {
                     })
             })
     });
+});
+
+describe('GET api/todos', () => {
+    it('should return all todos')
 });

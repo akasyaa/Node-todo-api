@@ -1,5 +1,6 @@
 const Todo = require('../models/todo');
 const User = require('../models/user');
+const { ObjectID } = require('mongodb');
 
 module.exports = (app) => {
     // POST
@@ -37,8 +38,27 @@ module.exports = (app) => {
             .then((todos) => {
                 res.send({ todos });
             })
-            .catch((err) => {
-                res.send(err);
+            .catch((e) => {
+                res.status(400).send(e);
+            })
+    });
+
+    app.get('/api/todos/:id', (req, res) => {
+        const id = req.params.id;
+
+        if (!ObjectID.isValid(id)) {
+            res.status(404).send();
+        }
+
+        Todo.findById(id)
+            .then((todo) => {
+                if (!todo) {
+                    return res.status(404).send();
+                }
+                res.send({ todo });
+            })
+            .catch((e) => {
+                res.status(400).send(e);
             })
     });
 
