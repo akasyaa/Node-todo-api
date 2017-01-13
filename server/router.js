@@ -72,5 +72,25 @@ module.exports = (app) => {
             })
     })
 
+    // DELETE
+    app.delete('/api/todos/:id', (req, res) => {
+        const id = req.params.id;
+
+        if (!ObjectID.isValid(id)) {
+            res.status(404).send();
+        }
+
+        Todo.findByIdAndRemove(id)
+            .then((todo) => {
+                if (!todo) {
+                    return res.status(400).send();
+                }
+                res.send(todo);
+            })
+            .catch((e) => {
+                res.status(400).send(e);
+            })
+    })
+
 
 }
