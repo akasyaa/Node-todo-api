@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 const Todo = require('../models/todo');
 const User = require('../models/user');
 const { ObjectID } = require('mongodb');
@@ -89,6 +91,35 @@ module.exports = (app) => {
             })
             .catch((e) => {
                 res.status(400).send(e);
+            })
+    })
+
+    // PATCH
+    app.patch('/api/todos/:id', (req, res) => {
+        const id = req.params.id;
+        const body = _.pick(req.body, ['text', 'completed']);
+
+        if (!ObjectID.isValid(id)) {
+            res.status(404).send();
+        }
+
+        if (_.isBoolean(body.completed) && body.completed) {
+            body.completedAt = new Date().getTime();
+        } else {
+            body.completed = false;
+            body.completedAt = null;
+        }
+
+        Todo.findByIdAndUpdate(id, { $set: body }, { new: true })
+            .then((todo) => {
+                if(!todo) {
+                    return res.status(400).send();
+                }
+
+                res.send({ todo });
+            })
+            .catch((e) => {
+                res.status(400).send();
             })
     })
 
